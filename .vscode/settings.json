@@ -1,0 +1,8 @@
+{
+    "editor.foldingMaximumRegions": 50000,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.format.enable": true,
+    "editor.formatOnSave": true
+}

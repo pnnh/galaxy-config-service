@@ -1,0 +1,10 @@
+.idea/
+build/
+gen/
+__debug_bin
+data/
+browser/dist/
+browser/debug/
+docker/assets/
+docker/bin
+debug/
