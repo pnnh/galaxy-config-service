@@ -11,8 +11,8 @@ import (
 type ConfigtTable struct {
 	Pk         string    `json:"pk"`      
 	Project    string    `json:"project"`  
-	CreateTime time.Time `json:"create_time"`
-	UpdateTime time.Time `json:"update_time"`
+	CreateTime time.Time `json:"create_time" db:"create_time"`
+	UpdateTime time.Time `json:"update_time" db:"update_time"`
 	Key        string    `json:"key"`
 	Value      string    `json:"value"`
 }
@@ -23,7 +23,7 @@ type ConfigModel struct {
  
 
 func SelectConfigs(project string) ([]*ConfigModel, error) {
-	sqlText := `select * from configs where project = :project;`
+	sqlText := `select pk, project, create_time, update_time, key, value from configs where project = :project;`
 
 	sqlParams := map[string]interface{}{"project": project}
 	var sqlResults []*ConfigtTable

@@ -17,7 +17,11 @@ type accountHandler struct {
 
 func (s *accountHandler) LoginByWebAuthn(gctx *gin.Context) {
 	
-	project := gctx.Params.ByName("project")
+	project, ok := gctx.GetQuery("project")
+	if !ok {
+		gctx.Status(http.StatusBadRequest)
+		return
+	}
 
 	configs, err :=	models.SelectConfigs(project)
 	if err != nil {
@@ -34,7 +38,7 @@ func (s *accountHandler) LoginByWebAuthn(gctx *gin.Context) {
 
 	content := sb.String()
 
-	gctx.String(http.StatusOK, "text/plain", content)
+	gctx.String(http.StatusOK, "%s", content)
 }
 
 func NewAccountHandler(middleware *middleware.ServerMiddleware) *accountHandler {

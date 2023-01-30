@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
-
-	"github.com/pnnh/multiverse-server/services/templs" 
-
+  
 	"github.com/pnnh/multiverse-server/server/middleware"
 
 	"github.com/pnnh/multiverse-server/server"
