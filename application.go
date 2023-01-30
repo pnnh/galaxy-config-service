@@ -4,9 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/pnnh/multiverse-server/services/templs"
-
-	"github.com/pnnh/multiverse-server/services/email"
+	"github.com/pnnh/multiverse-server/services/templs" 
 
 	"github.com/pnnh/multiverse-server/server/middleware"
 
@@ -40,16 +38,11 @@ func (app *Application) Use(key string, serv IService) {
 }
 
 func (app *Application) initMiddleware() (*middleware.ServerMiddleware, error) {
-	mailSvc := email.NewService()
-	app.Use("mail", mailSvc)
 	if err := sqlxsvc.Init(config.ACCOUNT_DB_DSN); err != nil {
 		logrus.Fatalln("sqlxsvc: ", err)
 	}
-	tmpls := templs.NewService()
-	app.Use("templs", tmpls)
 
 	serverMiddleware := &middleware.ServerMiddleware{
-		Templs: tmpls,
 	}
 	return serverMiddleware, nil
 }

@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -14,13 +13,6 @@ var ISSUER = "sfx.xyz" // TOTP发行机构
 var JWTRealm = "sfx.xyz"
 var JWTKey = ""
 var CSRFToken = ""
-
-var (
-	MailHost     = ""
-	MailPort     = 587
-	MailUser     = ""
-	MailPassword = ""
-)
 
 func init() {
 
@@ -37,10 +29,6 @@ func init() {
 	if len(ACCOUNT_DB_DSN) < 1 {
 		logrus.Fatalln("数据库未配置")
 	}
-
-	if len(CSRFToken) < 1 {
-		CSRFToken = uuid.New().String()[:32]
-	}
 }
 
 func Debug() bool {
@@ -53,4 +41,16 @@ func Test() bool {
 
 func Release() bool {
 	return GINMODE != gin.DebugMode && GINMODE != gin.TestMode
+}
+
+func LoadConfig(fileName, env string) (string, error) {
+	var awsConfig string
+	var err error
+
+	if Debug() {
+		awsConfig, err = LoadDebugConfig("main.config", "default")
+	} else {
+		awsConfig, err = LoadAwsConfig("main.config", "default")
+	}
+	return awsConfig, err
 }

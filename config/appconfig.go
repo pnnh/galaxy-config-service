@@ -1,7 +1,7 @@
 package config
 
 import (
-	"context" 
+	"context"
 	"os"
 	"strings"
 
@@ -16,14 +16,14 @@ var awsAppConfigClient *appconfig.Client
 func init() {
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("ap-east-1"))
 	if err != nil {
-		logrus.Fatalf("unable to load SDK config, %v", err) 
+		logrus.Fatalf("unable to load SDK config, %v", err)
 	}
 	svc := appconfig.NewFromConfig(cfg)
 	awsAppConfigClient = svc
 
 }
 
-func LoadAwsConfig(fileName, env string) string {
+func LoadAwsConfig(fileName, env string) (string, error) {
 	hostname, err := os.Hostname()
 	if err != nil {
 		logrus.Fatalln("获取主机名出错", err)
@@ -36,20 +36,25 @@ func LoadAwsConfig(fileName, env string) string {
 		Environment:   aws.String(env),
 	}
 	if Debug() {
-		in.Application = aws.String("debug.multiverse.direct") 
+		in.Application = aws.String("debug.multiverse.direct")
 	}
 	out, err := awsAppConfigClient.GetConfiguration(context.Background(), in)
 	if err != nil {
 		logrus.Fatalln("获取配置出错", fileName, env, err)
 	}
 	content := string(out.Content)
-	return content
+	return content, nil
 }
 
 func GetConfigurationMap() (map[string]string, error) {
 	var cmdEnv []string
-
-	awsConfig := LoadAwsConfig("main.config", "default")
+	var awsConfig string
+	var err error
+ 
+		awsConfig, err = LoadConfig("main.config", "default") 
+	if err != nil {
+		logrus.Fatalln("LoadAwsConfig", err)
+	}
 	awsEnvs := strings.Split(awsConfig, "\n")
 	for _, e := range awsEnvs {
 		cmdEnv = append(cmdEnv, e)

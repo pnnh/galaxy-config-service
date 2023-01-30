@@ -14,7 +14,6 @@ import (
 
 	"github.com/pnnh/multiverse-server/server/handlers"
 
-	"github.com/pnnh/multiverse-server/server/auth"
 
 	"github.com/pnnh/multiverse-server/config"
 
@@ -64,19 +63,11 @@ func NewWebServer(smw *middleware.ServerMiddleware) (*WebServer, error) {
 func (s *WebServer) Init() error {
 	indexHandler := pages.NewIndexHandler(s.middleware)
 	s.router.GET("/", indexHandler.Query)
-
-	s.router.Static("/assets", "./docker/assets")
-	authHandler := &webauthnHandler{middleware: s.middleware}
-	s.router.GET("/register/begin/:username", authHandler.BeginRegistration)
-	s.router.POST("/register/finish/:username", authHandler.FinishRegistration)
-	s.router.GET("/login/begin/:username", authHandler.BeginLogin)
-	s.router.POST("/login/finish/:username", authHandler.FinishLogin)
-
+ 
 	accountHandler := handlers.NewAccountHandler(s.middleware)
 
-	s.router.GET("/login", accountHandler.LoginByWebAuthn)
+	s.router.GET("/config/select", accountHandler.LoginByWebAuthn)
 
-	auth.InitOAuth2(s.router, s.middleware)
 
 	return nil
 }
@@ -84,7 +75,7 @@ func (s *WebServer) Init() error {
 func (s *WebServer) Start() error {
 	port := os.Getenv("PORT")
 	if len(port) < 1 {
-		port = "8000"
+		port = "8001"
 	}
 	var handler http.Handler = s
 
@@ -103,9 +94,5 @@ func (s *WebServer) Start() error {
 }
 
 func (s *WebServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//if config.Debug() && strings.HasPrefix(r.URL.Path, "/blog/") {
-	//	devBlogHandler(w, r)
-	//	return
-	//}
 	s.router.ServeHTTP(w, r)
 }

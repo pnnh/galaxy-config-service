@@ -2,9 +2,12 @@ package handlers
 
 import (
 	"net/http"
-	"github.com/pnnh/multiverse-server/server/middleware"
+	"strings"
 
-	"github.com/gin-contrib/sessions"
+	"github.com/pnnh/multiverse-server/server/middleware"
+	"github.com/pnnh/multiverse-server/server/models"
+	"github.com/sirupsen/logrus"
+ 
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,17 +16,25 @@ type accountHandler struct {
 }
 
 func (s *accountHandler) LoginByWebAuthn(gctx *gin.Context) {
-	session := sessions.Default(gctx)
-	authuser := session.Get("authuser")
+	
+	project := gctx.Params.ByName("project")
 
-	if authuser != nil {
-		gctx.HTML(http.StatusOK, "account/logined.mst", gin.H{
-			"username": authuser,
-		})
+	configs, err :=	models.SelectConfigs(project)
+	if err != nil {
+		gctx.Status(http.StatusInternalServerError)
+		logrus.Errorln("SelectConfigs: ", err)
 		return
 	}
+	sb := &strings.Builder{}
+	for _, v := range configs {
+		sb.WriteString(v.Key)
+		sb.WriteString("=")
+		sb.WriteString(v.Value)
+	}
 
-	gctx.HTML(http.StatusOK, "account/webauthn.mst", gin.H{})
+	content := sb.String()
+
+	gctx.String(http.StatusOK, "text/plain", content)
 }
 
 func NewAccountHandler(middleware *middleware.ServerMiddleware) *accountHandler {
@@ -31,3 +42,8 @@ func NewAccountHandler(middleware *middleware.ServerMiddleware) *accountHandler 
 		middleware,
 	}
 }
+
+ 
+
+
+
