@@ -1,3 +1,0 @@
-{{ define "res/css.mst" }}
-    <link rel='stylesheet' type='text/css' href='/assets/index.css' />
-{{ end }}

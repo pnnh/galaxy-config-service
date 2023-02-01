@@ -1,4 +1,0 @@
-{{ define "partial/footer.mst" }}
-<footer>
-</footer> 
-{{ end }}

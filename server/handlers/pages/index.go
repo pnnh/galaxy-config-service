@@ -16,7 +16,7 @@ type indexHandler struct {
 
 func (s *indexHandler) Query(gctx *gin.Context) {
 
-	gctx.HTML(http.StatusOK, "index/index.mst", gin.H{})
+	gctx.JSON(http.StatusOK,  gin.H{})
 }
 
 func NewIndexHandler(md *middleware.ServerMiddleware) *indexHandler {

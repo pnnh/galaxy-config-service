@@ -34,6 +34,7 @@ func (s *accountHandler) LoginByWebAuthn(gctx *gin.Context) {
 		sb.WriteString(v.Key)
 		sb.WriteString("=")
 		sb.WriteString(v.Value)
+		sb.WriteString("\n")
 	}
 
 	content := sb.String()

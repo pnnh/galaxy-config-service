@@ -13,11 +13,7 @@ WORKDIR /home
 ENV LD_LIBRARY_PATH /opt/lib
 
 # 拷贝程序
-COPY bin /opt/bin
-# 拷贝资源文件
-COPY assets /home/docker/assets
-# 拷贝模板文件
-COPY templates /home/docker/templates
+COPY bin /opt/bin 
 
 # 启动程序
 ENTRYPOINT ["/opt/bin/multiverse-server"]

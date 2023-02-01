@@ -1,4 +1,0 @@
-{{ define "partial/header.mst" }}
-<header class="nav-header">
-</header>
-{{ end }}

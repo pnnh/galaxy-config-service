@@ -7,8 +7,7 @@ import (
 	"time"
 
 	"github.com/pnnh/multiverse-server/server/middleware"
-
-	"github.com/pnnh/multiverse-server/server/helpers"
+ 
 
 	"github.com/pnnh/multiverse-server/server/handlers/pages"
 
@@ -35,9 +34,7 @@ func NewWebServer(smw *middleware.ServerMiddleware) (*WebServer, error) {
 	router.Use(gin.Recovery())
 	server := &WebServer{
 		router:     router,
-		middleware: smw}
-	router.SetFuncMap(helpers.FuncMap())
-	router.LoadHTMLGlob("docker/templates/**/*.mst")
+		middleware: smw} 
 
 	corsDomain := []string{"https://multiverse.direct", "https://www.multiverse.direct"}
 
